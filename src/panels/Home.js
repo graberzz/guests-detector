@@ -20,15 +20,18 @@ const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers }) => (
 
 		<Group title="Твои сталкеры">
 		<List>
-            {stalkers
+			{stalkers
+			  .sort((s1, s2) => s2.ts - s1.ts)
               .map((stalker, i) => (
-                <Cell
-                  key={i}
-                  before={<Avatar src={stalker.photo_200} size={40} />}
-                  description={new Date(stalker.ts).toLocaleString()}
-                >
-                  {stalker.first_name + ' ' + stalker.last_name}
-                </Cell>
+				<a style={{ textDecoration: 'none' }} target="_blank" href={`https://vk.com/id${stalker.id}`}>
+					<Cell
+					key={i}
+					before={<Avatar src={stalker.photo_200} size={40} />}
+					description={new Date(stalker.ts).toLocaleString()}
+					>
+					{stalker.first_name + ' ' + stalker.last_name}
+					</Cell>
+				</a>
               ))}
           </List>
 		</Group>
