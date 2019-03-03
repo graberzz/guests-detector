@@ -29,5 +29,5 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3"
   },
-  "home": "https://graberzz.github.io/guests-detector/"
+  "homepage": "https://graberzz.github.io/guests-detector"
 }

@@ -5,7 +5,7 @@ import Icon24Copy from '@vkontakte/icons/dist/24/copy';
 
 const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers }) => (
 	<Panel id={id}>
-		<PanelHeader>Главная</PanelHeader>
+		<PanelHeader>МОИ СТАЛКЕРЫ</PanelHeader>
 		{fetchedUser &&
 		<Group title="Вставь эту ссылку куда-нибудь себе на страницу">
 			<Cell

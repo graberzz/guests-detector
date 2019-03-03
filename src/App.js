@@ -24,7 +24,8 @@ class App extends React.Component {
       activePanel: "loading",
       fetchedUser: null,
       triedToClose: false,
-      linkCopied: false,
+	  linkCopied: false,
+	  stalkers: [],
       ref
     };
   }
@@ -35,10 +36,11 @@ class App extends React.Component {
       switch (e.detail.type) {
 		case "VKWebAppGetUserInfoResult":
 			// eslint-disable-next-line
-		  const isStalker = this.state.ref != e.detail.data.id
-		  
+		  const { ref } = this.state
+		  const isStalker = ref && ref !== e.detail.data.id
+
 		  if (isStalker) {
-			  api.addStalker({ id: this.state.ref, stalkerInfo: e.detail.data })
+			  api.addStalker({ id: ref, stalkerInfo: e.detail.data })
 		  }
 
           this.setState({
