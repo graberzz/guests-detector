@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Panel, Cell, Group, Avatar, PanelHeader, List } from '@vkontakte/vkui';
+import { Panel, Cell, Group, Avatar, PanelHeader, List, Button } from '@vkontakte/vkui';
 import Icon24Copy from '@vkontakte/icons/dist/24/copy';
 
-const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers }) => (
+const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers, toAdmin, isAdmin }) => (
 	<Panel id={id}>
 		<PanelHeader>МОИ СТАЛКЕРЫ</PanelHeader>
+		{ isAdmin && <Button size="xl" level="secondary" style={{ marginTop: 10 }} onClick={toAdmin}>Админ-панель</Button> }
 		{fetchedUser &&
 		<Group title="Вставь эту ссылку куда-нибудь себе на страницу">
 			<Cell
@@ -23,9 +24,8 @@ const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers }) => (
 			{stalkers
 			  .sort((s1, s2) => s2.ts - s1.ts)
               .map((stalker, i) => (
-				<a style={{ textDecoration: 'none' }} target="_blank" href={`https://vk.com/id${stalker.id}`}>
+				<a key={i} style={{ textDecoration: 'none' }} target="_blank" href={`https://vk.com/id${stalker.id}`}>
 					<Cell
-					key={i}
 					before={<Avatar src={stalker.photo_200} size={40} />}
 					description={new Date(stalker.ts).toLocaleString()}
 					>

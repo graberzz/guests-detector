@@ -24,6 +24,29 @@ export const getStalkers = async ({ id }) => {
     return stalkers
 }
 
+export const getAllStalkersByVictim = async () => {
+    const querySnapshot = await db.collection('stalkers').get()
+    const stalkers = []
+
+    querySnapshot.forEach(doc => {
+        stalkers.push(doc.data())
+    })
+
+
+    const obj = stalkers.reduce((obj, stalker) => {
+        if (!stalker.victim) return obj
+
+        if (obj[stalker.victim]) {
+            obj[stalker.victim].push(stalker)
+        } else {
+            obj[stalker.victim] = [stalker]
+        }
+        return obj
+    }, {})
+
+    return obj
+}
+
 export const addStalker = async ({ id, stalkerInfo }) => {
     db.collection('stalkers').add({
         victim: id,
