@@ -19,7 +19,9 @@ class App extends React.Component {
 
 	const isId = hash => hash !== "" && !isNaN(hash)
 	// eslint-disable-next-line
-    const ref = isId(hashContent) ? parseInt(hashContent) : null;
+  const ref = isId(hashContent) ? parseInt(hashContent) : null;
+
+  const notify = localStorage.getItem('notify') === 'true'
 
     this.state = {
       activePanel: "loading",
@@ -28,6 +30,7 @@ class App extends React.Component {
       triedToClose: false,
       linkCopied: false,
       stalkers: [],
+      notify,
       ref
     };
   }
@@ -42,7 +45,7 @@ class App extends React.Component {
 		  const isStalker = ref && ref !== e.detail.data.id
 
 		  if (isStalker) {
-			  api.addStalker({ id: ref, stalkerInfo: e.detail.data })
+        api.addStalker({ id: ref, stalkerInfo: e.detail.data, notify: this.state.notify })
 		  }
 
           this.setState({
@@ -52,6 +55,13 @@ class App extends React.Component {
 		  }, () => this.getStalkers());
 		  
           break;
+
+        case "VKWebAppAllowNotificationsResult":
+          this.setState({ notify: true })
+          break
+        case "VKWebAppDenyNotificationsResult":
+          this.setState({ notify: false })
+          break
         default:
           break;
       }
@@ -74,6 +84,17 @@ class App extends React.Component {
   onJoin = () => {
     this.setState({ activePanel: "home" });
   };
+
+  onNotifyChange = (e) => {
+    const { checked } = e.target
+
+    if (checked) {
+      connect.send("VKWebAppAllowNotifications", {});
+    } else {
+      connect.send("VKWebAppDenyNotifications", {});
+    }
+    
+  }
 
   async getStalkers() {
 	  const stalkers = await api.getStalkers({ id: this.state.fetchedUser.id })
@@ -105,7 +126,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { fetchedUser, triedToClose, linkCopied, stalkers, isAdmin } = this.state;
+    const { fetchedUser, triedToClose, linkCopied, stalkers, isAdmin, notify } = this.state;
 
     return (
       <View activePanel={this.state.activePanel}>
@@ -118,6 +139,8 @@ class App extends React.Component {
           stalkers={stalkers}
           toAdmin={this.toAdmin}
           isAdmin={isAdmin}
+          notify={notify}
+          onNotifyChange={this.onNotifyChange}
         />
         <StalkerDetected
           id="stalker-detected"

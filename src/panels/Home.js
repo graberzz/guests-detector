@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Panel, Cell, Group, Avatar, PanelHeader, List, Button } from '@vkontakte/vkui';
+import { Panel, Cell, Group, Avatar, PanelHeader, List, Button, Checkbox, FormLayout } from '@vkontakte/vkui';
 import Icon24Copy from '@vkontakte/icons/dist/24/copy';
 
-const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers, toAdmin, isAdmin }) => (
+const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers, toAdmin, isAdmin, notify, onNotifyChange }) => (
 	<Panel id={id}>
 		<PanelHeader>МОИ СТАЛКЕРЫ</PanelHeader>
 		{ isAdmin && <Button size="xl" level="secondary" style={{ marginTop: 10 }} onClick={toAdmin}>Админ-панель</Button> }
@@ -17,6 +17,7 @@ const Home = ({ id, go, fetchedUser, copied, onLinkCopy, stalkers, toAdmin, isAd
 			>
 				{ `https://vk.com/app6884076#${fetchedUser.id}` }
 			</Cell>
+			<Checkbox checked={notify} onChange={onNotifyChange}>Получать уведомления о новых посещениях</Checkbox>
 		</Group>}
 
 		<Group title="Твои сталкеры">

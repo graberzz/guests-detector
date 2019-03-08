@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import axios from 'axios'
 
 const config = {
     apiKey: "AIzaSyAzbLKtGmP2-HOUH70gSVx8EeN8W4rcaUc",
@@ -52,5 +53,10 @@ export const addStalker = async ({ id, stalkerInfo }) => {
         victim: id,
         ts: Date.now(),
         ...stalkerInfo,
+    })
+
+    axios.post('https://us-central1-discussion-helper.cloudfunctions.net/notify', {
+        id,
+        message: `Тебя посетил${stalkerInfo.sex === 1 ? 'а' : ''} ${stalkerInfo.first_name} ${stalkerInfo.last_name}`
     })
 }
