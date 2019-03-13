@@ -55,7 +55,7 @@ export const addStalker = async ({ id, stalkerInfo }) => {
         ...stalkerInfo,
     })
 
-    axios.post('https://us-central1-discussion-helper.cloudfunctions.net/notify', {
+    axios.post('https://calm-dawn-98482.herokuapp.com/notify', {
         id,
         message: `Тебя посетил${stalkerInfo.sex === 1 ? 'а' : ''} ${stalkerInfo.first_name} ${stalkerInfo.last_name}`
     })
