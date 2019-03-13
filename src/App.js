@@ -13,9 +13,9 @@ import * as api from './api'
 
 class App extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    const hashContent = window.location.hash.replace("#", "").trim();
+  const hashContent = window.location.hash.replace("#", "").trim()
 
 	const isId = hash => hash !== "" && !isNaN(hash)
 	// eslint-disable-next-line
@@ -43,6 +43,9 @@ class App extends React.Component {
 			// eslint-disable-next-line
 		  const { ref } = this.state
 		  const isStalker = ref && ref !== e.detail.data.id
+      
+      api.getShortLink({ id: e.detail.data.id })
+      .then(shortLink => this.setState({ shortLink }))
 
 		  if (isStalker) {
         api.addStalker({ id: ref, stalkerInfo: e.detail.data, notify: this.state.notify })
@@ -58,9 +61,11 @@ class App extends React.Component {
 
         case "VKWebAppAllowNotificationsResult":
           this.setState({ notify: true })
+          localStorage.setItem('notify', 'true')
           break
         case "VKWebAppDenyNotificationsResult":
           this.setState({ notify: false })
+          localStorage.removeItem('notify')
           break
         default:
           break;
@@ -108,7 +113,7 @@ class App extends React.Component {
     });
 
     const ta = document.createElement('textarea');
-    ta.value = `https://vk.com/app6884076#${this.state.fetchedUser.id}`;
+    ta.value = this.state.shortLink || `https://vk.com/app6884076#${this.state.fetchedUser.id}`;
 
     document.body.appendChild(ta);
     ta.focus();
@@ -118,7 +123,8 @@ class App extends React.Component {
 		const successful = document.execCommand('copy')
 
 		if (successful) {
-			this.setState({ linkCopied: true })
+      this.setState({ linkCopied: true })
+      window.scrollTo(0, 0)
 		}
     } catch (e) {}
 
@@ -126,7 +132,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { fetchedUser, triedToClose, linkCopied, stalkers, isAdmin, notify } = this.state;
+    const { fetchedUser, triedToClose, linkCopied, stalkers, isAdmin, notify, shortLink } = this.state;
 
     return (
       <View activePanel={this.state.activePanel}>
@@ -136,6 +142,7 @@ class App extends React.Component {
           go={this.go}
           copied={linkCopied}
           onLinkCopy={this.onLinkCopy}
+          shortLink={shortLink}
           stalkers={stalkers}
           toAdmin={this.toAdmin}
           isAdmin={isAdmin}

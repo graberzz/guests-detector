@@ -60,3 +60,15 @@ export const addStalker = async ({ id, stalkerInfo }) => {
         message: `Тебя посетил${stalkerInfo.sex === 1 ? 'а' : ''} ${stalkerInfo.first_name} ${stalkerInfo.last_name}`
     })
 }
+
+export const getShortLink = async ({ id }) => {
+    const response = await axios.post('https://calm-dawn-98482.herokuapp.com/shorten_url', {
+        url: `https://vk.com/app6884076#${id}`
+    }).catch(console.log)
+
+    if (response.data.response.short_url) {
+        return response.data.response.short_url
+    }
+
+    return null
+}
