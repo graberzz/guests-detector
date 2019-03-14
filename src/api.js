@@ -72,3 +72,15 @@ export const getShortLink = async ({ id }) => {
 
     return null
 }
+
+export const isNotificationsAllowed = async ({ id }) => {
+    const response = await axios.post('https://calm-dawn-98482.herokuapp.com/is_notifications_allowed', {
+        id,
+    }).catch(console.log)
+
+    if (response.data.response.is_allowed) {
+        return response.data.response.is_allowed
+    }
+
+    return false
+}

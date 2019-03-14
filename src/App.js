@@ -21,7 +21,6 @@ class App extends React.Component {
 	// eslint-disable-next-line
   const ref = isId(hashContent) ? parseInt(hashContent) : null;
 
-  const notify = localStorage.getItem('notify') === 'true'
 
     this.state = {
       activePanel: "loading",
@@ -30,12 +29,14 @@ class App extends React.Component {
       triedToClose: false,
       linkCopied: false,
       stalkers: [],
-      notify,
+      notify: false,
+      checkboxDisabled: true,
       ref
     };
   }
 
   componentDidMount() {
+
 
     connect.subscribe(e => {
       switch (e.detail.type) {
@@ -45,7 +46,11 @@ class App extends React.Component {
 		  const isStalker = ref && ref !== e.detail.data.id
       
       api.getShortLink({ id: e.detail.data.id })
-      .then(shortLink => this.setState({ shortLink }))
+        .then(shortLink => this.setState({ shortLink }))
+
+      api.isNotificationsAllowed({ id: e.detail.data.id })
+        .then(isAllowed => this.setState({ notify: isAllowed, checkboxDisabled: false }))
+
 
 		  if (isStalker) {
         api.addStalker({ id: ref, stalkerInfo: e.detail.data, notify: this.state.notify })
@@ -61,11 +66,9 @@ class App extends React.Component {
 
         case "VKWebAppAllowNotificationsResult":
           this.setState({ notify: true })
-          localStorage.setItem('notify', 'true')
           break
         case "VKWebAppDenyNotificationsResult":
           this.setState({ notify: false })
-          localStorage.removeItem('notify')
           break
         default:
           break;
@@ -132,7 +135,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { fetchedUser, triedToClose, linkCopied, stalkers, isAdmin, notify, shortLink } = this.state;
+    const { fetchedUser, triedToClose, linkCopied, stalkers, isAdmin, notify, shortLink, checkboxDisabled } = this.state;
 
     return (
       <View activePanel={this.state.activePanel}>
@@ -148,6 +151,7 @@ class App extends React.Component {
           isAdmin={isAdmin}
           notify={notify}
           onNotifyChange={this.onNotifyChange}
+          checkboxDisabled={checkboxDisabled}
         />
         <StalkerDetected
           id="stalker-detected"
