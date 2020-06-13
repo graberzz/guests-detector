@@ -1,4 +1,4 @@
-## How to install
+# How to install
 
 `npx @vkontakte/create-vk-app <folder name>`
 
